@@ -65,17 +65,24 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun onToggleClicked() {
         val intent = Intent(this, GestureService::class.java)
+        val willRun = !GestureService.isRunning
         if (GestureService.isRunning) {
             stopService(intent)
         } else {
             ContextCompat.startForegroundService(this, intent)
         }
-        updateToggleLabel()
+        // isRunning wird erst asynchron in onCreate/onDestroy des Service gesetzt,
+        // daher das Label sofort auf den beabsichtigten Zustand setzen.
+        setToggleLabel(willRun)
     }
 
     private fun updateToggleLabel() {
+        setToggleLabel(GestureService.isRunning)
+    }
+
+    private fun setToggleLabel(running: Boolean) {
         toggleButton.setText(
-            if (GestureService.isRunning) R.string.settings_stop else R.string.settings_start
+            if (running) R.string.settings_stop else R.string.settings_start
         )
     }
 
