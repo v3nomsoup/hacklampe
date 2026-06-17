@@ -15,10 +15,6 @@ class ChopDetector(sensitivity: Int = 5) {
     private var peakThreshold = 0f
     private var restThreshold = 0f
 
-    private val minGapNanos = 120_000_000L  // 120 ms: schneller wäre eine Bewegung
-    private val maxGapNanos = 700_000_000L  // 700 ms: langsamer zählt als getrennt
-    private val cooldownNanos = 800_000_000L // 800 ms Sperre nach Auslösen
-
     private var armed = true
     private var hasFirstChop = false
     private var firstChopNanos = 0L
@@ -32,11 +28,14 @@ class ChopDetector(sensitivity: Int = 5) {
     fun setSensitivity(level: Int) {
         val l = level.coerceIn(1, 10)
         // level 1 -> 25 m/s², level 10 -> 10 m/s² (linear interpoliert)
-        peakThreshold = 25f - (l - 1) * (15f / 9f)
-        restThreshold = peakThreshold * 0.4f
+        peakThreshold = MAX_PEAK_THRESHOLD - (l - 1) * (PEAK_THRESHOLD_SPAN / 9f)
+        restThreshold = peakThreshold * REST_RATIO
     }
 
-    /** Liefert true, sobald ein vollständiger Doppel-Chop erkannt wurde. */
+    /**
+     * Liefert true, sobald ein vollständiger Doppel-Chop erkannt wurde.
+     * Erwartet monoton nicht-fallende Zeitstempel (z. B. SensorEvent.timestamp).
+     */
     fun onSample(timestampNanos: Long, magnitude: Float): Boolean {
         if (!armed) {
             if (magnitude < restThreshold) armed = true
@@ -60,17 +59,30 @@ class ChopDetector(sensitivity: Int = 5) {
         }
         val gap = now - firstChopNanos
         return when {
-            gap in minGapNanos..maxGapNanos -> {
+            gap in MIN_GAP_NANOS..MAX_GAP_NANOS -> {
                 hasFirstChop = false
-                cooldownUntilNanos = now + cooldownNanos
+                cooldownUntilNanos = now + COOLDOWN_NANOS
                 true
             }
-            gap > maxGapNanos -> {
+            gap > MAX_GAP_NANOS -> {
                 // zu langsam: dieser Chop startet ein neues Paar
                 firstChopNanos = now
                 false
             }
             else -> false // zu schnell: zweiten Peak ignorieren, ersten behalten
         }
+    }
+
+    private companion object {
+        /** Peak-Schwellwert bei Empfindlichkeit 1 (unempfindlichste Stufe), m/s². */
+        const val MAX_PEAK_THRESHOLD = 25f
+        /** Spanne über Level 1..10: 25 - 15 = 10 m/s² bei höchster Empfindlichkeit. */
+        const val PEAK_THRESHOLD_SPAN = 15f
+        /** Ruhe-/Wieder-Scharf-Schranke als Anteil des Peak-Schwellwerts. */
+        const val REST_RATIO = 0.4f
+
+        const val MIN_GAP_NANOS = 120_000_000L   // 120 ms: schneller wäre eine Bewegung
+        const val MAX_GAP_NANOS = 700_000_000L   // 700 ms: langsamer zählt als getrennt
+        const val COOLDOWN_NANOS = 800_000_000L  // 800 ms Sperre nach Auslösen
     }
 }
