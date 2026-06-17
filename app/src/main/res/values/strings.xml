@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">HackLampe</string>
+    <string name="notification_channel_name">Gestenerkennung</string>
+    <string name="notification_title">HackLampe aktiv</string>
+    <string name="notification_text">Doppel-Hack schaltet die Taschenlampe</string>
+    <string name="notification_stop">Stoppen</string>
+    <string name="tile_label">HackLampe</string>
+    <string name="settings_start">Gestenerkennung starten</string>
+    <string name="settings_stop">Gestenerkennung stoppen</string>
+    <string name="settings_sensitivity">Empfindlichkeit</string>
+    <string name="settings_autostart">Beim Neustart automatisch starten</string>
+    <string name="settings_hint">Mache zwei schnelle Hackbewegungen, um die Taschenlampe umzuschalten.</string>
+</resources>
