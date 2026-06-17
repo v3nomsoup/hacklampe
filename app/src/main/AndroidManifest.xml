@@ -35,5 +35,16 @@
                 android:value="gesture_to_torch" />
         </service>
 
+        <service
+            android:name=".tile.HackTile"
+            android:exported="true"
+            android:icon="@android:drawable/ic_menu_view"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
     </application>
 </manifest>
