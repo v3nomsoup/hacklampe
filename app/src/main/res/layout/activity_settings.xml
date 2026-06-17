@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_hint"
+        android:paddingBottom="24dp" />
+
+    <Button
+        android:id="@+id/toggleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_start" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_sensitivity"
+        android:paddingTop="32dp" />
+
+    <SeekBar
+        android:id="@+id/sensitivitySeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="9" />
+
+    <CheckBox
+        android:id="@+id/autostartCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_autostart"
+        android:paddingTop="32dp" />
+
+</LinearLayout>
