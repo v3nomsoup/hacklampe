@@ -6,12 +6,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.detector.ChopDetector
@@ -35,8 +37,6 @@ class GestureService : Service(), SensorEventListener {
         torch = TorchController(this)
 
         createChannel()
-        startForeground(NOTIF_ID, buildNotification())
-
         sensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
@@ -46,6 +46,17 @@ class GestureService : Service(), SensorEventListener {
         if (intent?.action == ACTION_STOP) {
             stopSelf()
             return START_NOT_STICKY
+        }
+        // Pflicht-Promotion zum Vordergrund-Service MIT deklariertem Typ.
+        // Ab Android 14 (API 34) zwingend, sonst stürzt der Start ab.
+        ServiceCompat.startForeground(
+            this,
+            NOTIF_ID,
+            buildNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+        )
+        if (intent?.action == ACTION_REFRESH) {
+            detector.setSensitivity(Prefs.getSensitivity(this))
         }
         return START_STICKY
     }
@@ -86,7 +97,7 @@ class GestureService : Service(), SensorEventListener {
         }
         val stopPending = PendingIntent.getService(
             this, 0, stopIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title))
@@ -103,6 +114,7 @@ class GestureService : Service(), SensorEventListener {
             private set
 
         const val ACTION_STOP = "de.hacklampe.app.action.STOP"
+        const val ACTION_REFRESH = "de.hacklampe.app.action.REFRESH"
         private const val CHANNEL_ID = "hacklampe_gestures"
         private const val NOTIF_ID = 1
     }
