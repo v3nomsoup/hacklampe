@@ -10,9 +10,16 @@ import de.hacklampe.app.service.GestureService
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED && Prefs.isAutoStart(context)) {
-            ContextCompat.startForegroundService(
-                context, Intent(context, GestureService::class.java)
-            )
+            try {
+                ContextCompat.startForegroundService(
+                    context, Intent(context, GestureService::class.java)
+                )
+            } catch (e: Exception) {
+                // Ab Android 12+ darf ein specialUse-Foreground-Service evtl. nicht
+                // direkt nach dem Boot gestartet werden
+                // (ForegroundServiceStartNotAllowedException). Autostart ist daher
+                // Best-Effort; der Nutzer kann den Dienst per Kachel/App starten.
+            }
         }
     }
 }
