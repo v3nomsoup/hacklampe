@@ -54,4 +54,28 @@ class ChopDetectorTest {
         assertFalse(d.onSample(450 * ms, rest))
         assertFalse(d.onSample(500 * ms, peak))
     }
+
+    @Test
+    fun twoChopsTooFastDoNotTrigger() {
+        val d = ChopDetector(sensitivity = 5)
+        assertFalse(d.onSample(0, peak))          // Chop 1
+        assertFalse(d.onSample(20 * ms, rest))    // wieder scharf
+        assertFalse(d.onSample(60 * ms, peak))    // Gap 60 ms < Minimum (120 ms) -> ignorieren
+    }
+
+    @Test
+    fun gapAtMinBoundaryTriggers() {
+        val d = ChopDetector(sensitivity = 5)
+        assertFalse(d.onSample(0, peak))
+        assertFalse(d.onSample(50 * ms, rest))
+        assertTrue(d.onSample(120 * ms, peak))    // genau am Minimum -> auslösen (inklusiv)
+    }
+
+    @Test
+    fun gapAtMaxBoundaryTriggers() {
+        val d = ChopDetector(sensitivity = 5)
+        assertFalse(d.onSample(0, peak))
+        assertFalse(d.onSample(50 * ms, rest))
+        assertTrue(d.onSample(700 * ms, peak))    // genau am Maximum -> auslösen (inklusiv)
+    }
 }
