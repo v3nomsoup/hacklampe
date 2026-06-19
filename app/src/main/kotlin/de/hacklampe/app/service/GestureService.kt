@@ -27,6 +27,9 @@ class GestureService : Service(), SensorEventListener {
     private lateinit var detector: ChopDetector
     private lateinit var torch: TorchController
 
+    private var maxInWindow = 0f
+    private var windowStartNanos = 0L
+
     override fun onCreate() {
         super.onCreate()
         isRunning = true
@@ -35,6 +38,12 @@ class GestureService : Service(), SensorEventListener {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
         detector = ChopDetector(Prefs.getSensitivity(this))
         torch = TorchController(this)
+
+        android.util.Log.i(TAG, "Service gestartet, Empfindlichkeit=${Prefs.getSensitivity(this)}")
+        detector.observer = { event, ts, magnitude, gapNanos ->
+            val gapMs = gapNanos / 1_000_000.0
+            android.util.Log.i(TAG, "EVENT=$event mag=%.2f gapMs=%.1f ts=%d".format(magnitude, gapMs, ts))
+        }
 
         createChannel()
         sensor?.let {
@@ -68,6 +77,16 @@ class GestureService : Service(), SensorEventListener {
         val magnitude = sqrt(x * x + y * y + z * z)
         if (detector.onSample(event.timestamp, magnitude)) {
             torch.toggle()
+            android.util.Log.i(TAG, "DOPPEL-HACK -> Taschenlampe umgeschaltet")
+        }
+
+        // Periodisch (~1 s) die höchste Magnitude loggen, um Beinahe-Treffer zu sehen.
+        if (windowStartNanos == 0L) windowStartNanos = event.timestamp
+        if (magnitude > maxInWindow) maxInWindow = magnitude
+        if (event.timestamp - windowStartNanos >= 1_000_000_000L) {
+            android.util.Log.d(TAG, "max1s=%.2f".format(maxInWindow))
+            maxInWindow = 0f
+            windowStartNanos = event.timestamp
         }
     }
 
@@ -117,5 +136,6 @@ class GestureService : Service(), SensorEventListener {
         const val ACTION_REFRESH = "de.hacklampe.app.action.REFRESH"
         private const val CHANNEL_ID = "hacklampe_gestures"
         private const val NOTIF_ID = 1
+        private const val TAG = "HackLampe"
     }
 }
