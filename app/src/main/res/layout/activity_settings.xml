@@ -114,6 +114,24 @@
                 android:text="@string/sensitivity_hint"
                 android:textColor="#808080"
                 android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/calibrationStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="14dp"
+                android:text="@string/cal_status_manual"
+                android:textColor="#B0B0B0"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/calibrateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#2A2A2A"
+                android:text="@string/calibrate_button"
+                android:textColor="#FFB300" />
         </LinearLayout>
 
         <LinearLayout

@@ -28,6 +28,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.CalibrationActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.GestureService"
             android:exported="false"

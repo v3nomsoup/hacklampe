@@ -20,4 +20,15 @@
     <string name="perm_dialog_message">HackLampe erkennt die Hackgeste über einen Hintergrunddienst. Android verlangt dafür eine dauerhafte Benachrichtigung als Statusanzeige. Bitte erlaube Benachrichtigungen im nächsten Schritt.</string>
     <string name="perm_dialog_ok">Verstanden</string>
     <string name="perm_dialog_cancel">Abbrechen</string>
+    <string name="cal_title">Kalibrierung</string>
+    <string name="cal_instruction">Mach 4–6 kräftige Hackbewegungen.</string>
+    <string name="cal_instruction_ready">Gut! Tippe auf „Fertig".</string>
+    <string name="cal_instruction_result">Passt das? Übernehmen oder wiederholen.</string>
+    <string name="cal_count">%1$d Schläge erkannt</string>
+    <string name="cal_done">Fertig</string>
+    <string name="cal_cancel">Abbrechen</string>
+    <string name="cal_apply">Übernehmen</string>
+    <string name="cal_retry">Wiederholen</string>
+    <string name="calibrate_button">🎯 Kalibrieren</string>
+    <string name="cal_status_manual">Modus: manuell (Regler)</string>
 </resources>
