@@ -27,10 +27,6 @@ class GestureService : Service(), SensorEventListener {
     private lateinit var detector: ChopDetector
     private lateinit var torch: TorchController
 
-    private var maxInWindow = 0f
-    private var windowStartNanos = 0L
-    private var firstSampleNanos = 0L
-
     override fun onCreate() {
         super.onCreate()
         isRunning = true
@@ -41,10 +37,6 @@ class GestureService : Service(), SensorEventListener {
         torch = TorchController(this)
 
         applyConfig()
-        detector.observer = { event, ts, magnitude, gapNanos ->
-            val gapMs = gapNanos / 1_000_000.0
-            android.util.Log.i(TAG, "EVENT=$event mag=%.2f gapMs=%.1f ts=%d".format(magnitude, gapMs, ts))
-        }
 
         createChannel()
         sensor?.let {
@@ -73,13 +65,9 @@ class GestureService : Service(), SensorEventListener {
 
     private fun applyConfig() {
         if (Prefs.isCalibrated(this)) {
-            val peak = Prefs.getCalibratedPeak(this)
-            val valley = Prefs.getCalibratedValley(this)
-            detector.setThresholds(peak, valley)
-            android.util.Log.i(TAG, "Konfig: kalibriert peak=%.1f valley=%.1f".format(peak, valley))
+            detector.setThresholds(Prefs.getCalibratedPeak(this), Prefs.getCalibratedValley(this))
         } else {
             detector.setSensitivity(Prefs.getSensitivity(this))
-            android.util.Log.i(TAG, "Konfig: Empfindlichkeit=${Prefs.getSensitivity(this)}")
         }
     }
 
@@ -88,27 +76,8 @@ class GestureService : Service(), SensorEventListener {
         val y = event.values[1]
         val z = event.values[2]
         val magnitude = sqrt(x * x + y * y + z * z)
-
-        // DIAGNOSE: Wellenform der Bewegung dicht protokollieren (nur über 6 m/s²),
-        // um die Form eines Doppel-Hacks zu analysieren. Vor Release entfernen.
-        if (firstSampleNanos == 0L) firstSampleNanos = event.timestamp
-        if (magnitude > 6f) {
-            val tMs = (event.timestamp - firstSampleNanos) / 1_000_000L
-            android.util.Log.i(TAG, "WAVE t=$tMs mag=%.1f".format(magnitude))
-        }
-
         if (detector.onSample(event.timestamp, magnitude)) {
             torch.toggle()
-            android.util.Log.i(TAG, "DOPPEL-HACK -> Taschenlampe umgeschaltet")
-        }
-
-        // Periodisch (~1 s) die höchste Magnitude loggen, um Beinahe-Treffer zu sehen.
-        if (windowStartNanos == 0L) windowStartNanos = event.timestamp
-        if (magnitude > maxInWindow) maxInWindow = magnitude
-        if (event.timestamp - windowStartNanos >= 1_000_000_000L) {
-            android.util.Log.d(TAG, "max1s=%.2f".format(maxInWindow))
-            maxInWindow = 0f
-            windowStartNanos = event.timestamp
         }
     }
 
@@ -143,7 +112,7 @@ class GestureService : Service(), SensorEventListener {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_text))
-            .setSmallIcon(android.R.drawable.ic_menu_view)
+            .setSmallIcon(R.drawable.ic_tile_flashlight)
             .setOngoing(true)
             .addAction(0, getString(R.string.notification_stop), stopPending)
             .build()
@@ -158,6 +127,5 @@ class GestureService : Service(), SensorEventListener {
         const val ACTION_REFRESH = "de.hacklampe.app.action.REFRESH"
         private const val CHANNEL_ID = "hacklampe_gestures"
         private const val NOTIF_ID = 1
-        private const val TAG = "HackLampe"
     }
 }
