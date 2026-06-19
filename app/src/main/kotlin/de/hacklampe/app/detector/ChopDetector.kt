@@ -28,15 +28,6 @@ class ChopDetector(sensitivity: Int = 5) {
     private var firstChopNanos = 0L
     private var cooldownUntilNanos = Long.MIN_VALUE
 
-    /** Diagnose-Ereignisse für Kalibrierung/Logging. */
-    enum class Event { FIRST_CHOP, DOUBLE_CHOP, TOO_FAST, TOO_SLOW_RESTART, IN_COOLDOWN }
-
-    /**
-     * Optionaler Beobachter für Diagnose. Wird an jedem Entscheidungspunkt aufgerufen.
-     * Standard null -> kein Einfluss auf bestehendes Verhalten/Tests.
-     */
-    var observer: ((event: Event, timestampNanos: Long, magnitude: Float, gapNanos: Long) -> Unit)? = null
-
     init {
         setSensitivity(sensitivity)
     }
@@ -67,19 +58,17 @@ class ChopDetector(sensitivity: Int = 5) {
         if (magnitude < peakThreshold) return false
         // Steigende Flanke über den Schwellwert -> ein Chop
         armed = false
-        return registerChop(timestampNanos, magnitude)
+        return registerChop(timestampNanos)
     }
 
-    private fun registerChop(now: Long, magnitude: Float): Boolean {
+    private fun registerChop(now: Long): Boolean {
         if (now < cooldownUntilNanos) {
             hasFirstChop = false
-            observer?.invoke(Event.IN_COOLDOWN, now, magnitude, 0L)
             return false
         }
         if (!hasFirstChop) {
             hasFirstChop = true
             firstChopNanos = now
-            observer?.invoke(Event.FIRST_CHOP, now, magnitude, 0L)
             return false
         }
         val gap = now - firstChopNanos
@@ -87,20 +76,14 @@ class ChopDetector(sensitivity: Int = 5) {
             gap in MIN_GAP_NANOS..MAX_GAP_NANOS -> {
                 hasFirstChop = false
                 cooldownUntilNanos = now + COOLDOWN_NANOS
-                observer?.invoke(Event.DOUBLE_CHOP, now, magnitude, gap)
                 true
             }
             gap > MAX_GAP_NANOS -> {
-                // zu langsam: dieser Chop startet ein neues Paar
+                // zu langsam: dieser Schlag startet ein neues Paar
                 firstChopNanos = now
-                observer?.invoke(Event.TOO_SLOW_RESTART, now, magnitude, gap)
                 false
             }
-            else -> {
-                // zu schnell: zweiten Peak ignorieren, ersten behalten
-                observer?.invoke(Event.TOO_FAST, now, magnitude, gap)
-                false
-            }
+            else -> false // zu schnell: zweiten Schlag ignorieren, ersten behalten
         }
     }
 
