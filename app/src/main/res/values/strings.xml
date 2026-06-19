@@ -7,7 +7,17 @@
     <string name="tile_label">HackLampe</string>
     <string name="settings_start">Gestenerkennung starten</string>
     <string name="settings_stop">Gestenerkennung stoppen</string>
-    <string name="settings_sensitivity">Empfindlichkeit</string>
-    <string name="settings_autostart">Beim Neustart automatisch starten</string>
+    <string name="settings_sensitivity">⚡ Empfindlichkeit</string>
+    <string name="settings_autostart">🔄 Beim Neustart automatisch starten</string>
     <string name="settings_hint">Mache zwei schnelle Hackbewegungen, um die Taschenlampe umzuschalten.</string>
+    <string name="status_on">● Aktiv – Doppel-Hack schaltet das Licht</string>
+    <string name="status_off">○ Inaktiv</string>
+    <string name="sensitivity_value">%1$d / 10</string>
+    <string name="sensitivity_hint">links = robuster · rechts = empfindlicher</string>
+    <string name="autostart_hint">Geräteabhängig – manche Hersteller blockieren den Autostart.</string>
+    <string name="info_notification">ℹ️ HackLampe läuft als Hintergrunddienst. Android zeigt dafür eine dauerhafte Benachrichtigung – das ist nötig, damit die Geste auch bei geschlossener App erkannt wird.</string>
+    <string name="perm_dialog_title">Benachrichtigung erforderlich</string>
+    <string name="perm_dialog_message">HackLampe erkennt die Hackgeste über einen Hintergrunddienst. Android verlangt dafür eine dauerhafte Benachrichtigung als Statusanzeige. Bitte erlaube Benachrichtigungen im nächsten Schritt.</string>
+    <string name="perm_dialog_ok">Verstanden</string>
+    <string name="perm_dialog_cancel">Abbrechen</string>
 </resources>
