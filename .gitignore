@@ -4,3 +4,6 @@ local.properties
 *.apk
 .idea/
 .DS_Store
+# Release-Signierung (geheim halten, separat sichern!)
+*.jks
+keystore.properties
