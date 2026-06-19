@@ -4,16 +4,24 @@ package de.hacklampe.app.detector
  * Erkennt das Doppel-Hack-Muster aus einem Strom von Beschleunigungs-Beträgen.
  * Reine Logik ohne Android-Abhängigkeit, damit voll unit-testbar.
  *
- * Ablauf:
- *  - Ein "Chop" wird erkannt, wenn der Betrag den Peak-Schwellwert übersteigt,
- *    nachdem er zuvor unter die Ruhe-Schranke gefallen war (steigende Flanke).
- *  - Zwei Chops mit einem Abstand im erlaubten Fenster ergeben einen Doppel-Chop.
+ * Modell (Schmitt-Trigger-Peakzähler):
+ *  - Ein "Hack" (Schlag) wird gezählt, wenn der Betrag die obere Schwelle
+ *    [peakThreshold] übersteigt. Danach ist der Detektor "entschärft", bis der
+ *    Betrag wieder unter die untere Schwelle [valleyThreshold] fällt — erst dann
+ *    zählt der nächste Schlag. Diese Hysterese trennt die zwei Schläge eines
+ *    Doppel-Hacks (deren "Tal" real bei ~20 m/s² liegt), ohne einen einzelnen
+ *    kräftigen Schlag doppelt zu zählen.
+ *  - Zwei Schläge mit einem Abstand im erlaubten Fenster ergeben einen Doppel-Hack.
  *  - Nach dem Auslösen sperrt ein Cooldown weitere Auslöser kurzzeitig.
+ *
+ * Schwellwerte aus realen Geräte-Messungen kalibriert: deutliche Hacks erreichen
+ * 100–150 m/s², das Tal zwischen zwei Schlägen ~20 m/s², der Rückprall eines
+ * Einzel-Hacks bleibt unter ~25 m/s², Gehen/Hinlegen unter ~15 m/s².
  */
 class ChopDetector(sensitivity: Int = 5) {
 
     private var peakThreshold = 0f
-    private var restThreshold = 0f
+    private var valleyThreshold = 0f
 
     private var armed = true
     private var hasFirstChop = false
@@ -36,9 +44,9 @@ class ChopDetector(sensitivity: Int = 5) {
     /** Empfindlichkeit 1 (unempfindlich) .. 10 (sehr empfindlich). */
     fun setSensitivity(level: Int) {
         val l = level.coerceIn(1, 10)
-        // level 1 -> 25 m/s², level 10 -> 10 m/s² (linear interpoliert)
+        // level 1 -> 60 m/s² (nur sehr kräftige Hacks), level 10 -> 22 m/s²
         peakThreshold = MAX_PEAK_THRESHOLD - (l - 1) * (PEAK_THRESHOLD_SPAN / 9f)
-        restThreshold = peakThreshold * REST_RATIO
+        valleyThreshold = peakThreshold * VALLEY_RATIO
     }
 
     /**
@@ -47,7 +55,7 @@ class ChopDetector(sensitivity: Int = 5) {
      */
     fun onSample(timestampNanos: Long, magnitude: Float): Boolean {
         if (!armed) {
-            if (magnitude < restThreshold) armed = true
+            if (magnitude < valleyThreshold) armed = true
             return false
         }
         if (magnitude < peakThreshold) return false
@@ -92,14 +100,14 @@ class ChopDetector(sensitivity: Int = 5) {
 
     private companion object {
         /** Peak-Schwellwert bei Empfindlichkeit 1 (unempfindlichste Stufe), m/s². */
-        const val MAX_PEAK_THRESHOLD = 25f
-        /** Spanne über Level 1..10: 25 - 15 = 10 m/s² bei höchster Empfindlichkeit. */
-        const val PEAK_THRESHOLD_SPAN = 15f
-        /** Ruhe-/Wieder-Scharf-Schranke als Anteil des Peak-Schwellwerts. */
-        const val REST_RATIO = 0.4f
+        const val MAX_PEAK_THRESHOLD = 60f
+        /** Spanne über Level 1..10: 60 - 38 = 22 m/s² bei höchster Empfindlichkeit. */
+        const val PEAK_THRESHOLD_SPAN = 38f
+        /** Wieder-Scharf-Schranke (Tal zwischen zwei Schlägen) als Anteil des Peaks. */
+        const val VALLEY_RATIO = 0.6f
 
-        const val MIN_GAP_NANOS = 120_000_000L   // 120 ms: schneller wäre eine Bewegung
-        const val MAX_GAP_NANOS = 700_000_000L   // 700 ms: langsamer zählt als getrennt
-        const val COOLDOWN_NANOS = 800_000_000L  // 800 ms Sperre nach Auslösen
+        const val MIN_GAP_NANOS = 100_000_000L    // 100 ms: schneller wäre ein Schlag
+        const val MAX_GAP_NANOS = 800_000_000L    // 800 ms: langsamer zählt als getrennt
+        const val COOLDOWN_NANOS = 1_000_000_000L // 1 s Sperre nach Auslösen
     }
 }
