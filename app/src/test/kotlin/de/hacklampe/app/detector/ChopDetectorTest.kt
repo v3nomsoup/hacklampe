@@ -8,10 +8,11 @@ class ChopDetectorTest {
 
     private val ms = 1_000_000L // Nanosekunden pro Millisekunde
 
-    // Bei Empfindlichkeit 5 liegt der Peak-Schwellwert ~18.3 m/s², die
-    // Wieder-Scharf-Schranke ~7.3 m/s². 30f gilt als Peak, 0f als Ruhe.
-    private val peak = 30f
-    private val rest = 0f
+    // Bei Empfindlichkeit 5 liegt die Peak-Schwelle ~43.1 m/s², die
+    // Wieder-Scharf-Schranke (Tal) ~25.9 m/s². 80f gilt als Schlag,
+    // 10f als Tal/Ruhe (unter der Wieder-Scharf-Schranke).
+    private val peak = 80f
+    private val rest = 10f
 
     @Test
     fun singleChopDoesNotTrigger() {
@@ -60,7 +61,7 @@ class ChopDetectorTest {
         val d = ChopDetector(sensitivity = 5)
         assertFalse(d.onSample(0, peak))          // Chop 1
         assertFalse(d.onSample(20 * ms, rest))    // wieder scharf
-        assertFalse(d.onSample(60 * ms, peak))    // Gap 60 ms < Minimum (120 ms) -> ignorieren
+        assertFalse(d.onSample(60 * ms, peak))    // Gap 60 ms < Minimum (100 ms) -> ignorieren
     }
 
     @Test
@@ -68,7 +69,7 @@ class ChopDetectorTest {
         val d = ChopDetector(sensitivity = 5)
         assertFalse(d.onSample(0, peak))
         assertFalse(d.onSample(50 * ms, rest))
-        assertTrue(d.onSample(120 * ms, peak))    // genau am Minimum -> auslösen (inklusiv)
+        assertTrue(d.onSample(100 * ms, peak))    // genau am Minimum -> auslösen (inklusiv)
     }
 
     @Test
@@ -76,6 +77,6 @@ class ChopDetectorTest {
         val d = ChopDetector(sensitivity = 5)
         assertFalse(d.onSample(0, peak))
         assertFalse(d.onSample(50 * ms, rest))
-        assertTrue(d.onSample(700 * ms, peak))    // genau am Maximum -> auslösen (inklusiv)
+        assertTrue(d.onSample(800 * ms, peak))    // genau am Maximum -> auslösen (inklusiv)
     }
 }

@@ -29,6 +29,7 @@ class GestureService : Service(), SensorEventListener {
 
     private var maxInWindow = 0f
     private var windowStartNanos = 0L
+    private var firstSampleNanos = 0L
 
     override fun onCreate() {
         super.onCreate()
@@ -75,6 +76,15 @@ class GestureService : Service(), SensorEventListener {
         val y = event.values[1]
         val z = event.values[2]
         val magnitude = sqrt(x * x + y * y + z * z)
+
+        // DIAGNOSE: Wellenform der Bewegung dicht protokollieren (nur über 6 m/s²),
+        // um die Form eines Doppel-Hacks zu analysieren. Vor Release entfernen.
+        if (firstSampleNanos == 0L) firstSampleNanos = event.timestamp
+        if (magnitude > 6f) {
+            val tMs = (event.timestamp - firstSampleNanos) / 1_000_000L
+            android.util.Log.i(TAG, "WAVE t=$tMs mag=%.1f".format(magnitude))
+        }
+
         if (detector.onSample(event.timestamp, magnitude)) {
             torch.toggle()
             android.util.Log.i(TAG, "DOPPEL-HACK -> Taschenlampe umgeschaltet")
