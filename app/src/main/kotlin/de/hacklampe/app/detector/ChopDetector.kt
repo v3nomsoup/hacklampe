@@ -49,6 +49,12 @@ class ChopDetector(sensitivity: Int = 5) {
         valleyThreshold = peakThreshold * VALLEY_RATIO
     }
 
+    /** Setzt die Schwellen direkt (aus einer Kalibrierung). */
+    fun setThresholds(peak: Float, valley: Float) {
+        peakThreshold = peak
+        valleyThreshold = valley
+    }
+
     /**
      * Liefert true, sobald ein vollständiger Doppel-Chop erkannt wurde.
      * Erwartet monoton nicht-fallende Zeitstempel (z. B. SensorEvent.timestamp).

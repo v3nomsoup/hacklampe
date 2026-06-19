@@ -37,10 +37,10 @@ class GestureService : Service(), SensorEventListener {
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
-        detector = ChopDetector(Prefs.getSensitivity(this))
+        detector = ChopDetector()
         torch = TorchController(this)
 
-        android.util.Log.i(TAG, "Service gestartet, Empfindlichkeit=${Prefs.getSensitivity(this)}")
+        applyConfig()
         detector.observer = { event, ts, magnitude, gapNanos ->
             val gapMs = gapNanos / 1_000_000.0
             android.util.Log.i(TAG, "EVENT=$event mag=%.2f gapMs=%.1f ts=%d".format(magnitude, gapMs, ts))
@@ -66,9 +66,21 @@ class GestureService : Service(), SensorEventListener {
             ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
         )
         if (intent?.action == ACTION_REFRESH) {
-            detector.setSensitivity(Prefs.getSensitivity(this))
+            applyConfig()
         }
         return START_STICKY
+    }
+
+    private fun applyConfig() {
+        if (Prefs.isCalibrated(this)) {
+            val peak = Prefs.getCalibratedPeak(this)
+            val valley = Prefs.getCalibratedValley(this)
+            detector.setThresholds(peak, valley)
+            android.util.Log.i(TAG, "Konfig: kalibriert peak=%.1f valley=%.1f".format(peak, valley))
+        } else {
+            detector.setSensitivity(Prefs.getSensitivity(this))
+            android.util.Log.i(TAG, "Konfig: Empfindlichkeit=${Prefs.getSensitivity(this)}")
+        }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
