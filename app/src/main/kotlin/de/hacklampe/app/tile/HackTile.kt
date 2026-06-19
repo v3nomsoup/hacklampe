@@ -27,6 +27,7 @@ class HackTile : TileService() {
     private fun updateTile() {
         qsTile?.apply {
             icon = Icon.createWithResource(this@HackTile, R.drawable.ic_tile_flashlight)
+            label = getString(R.string.tile_label)
             state = if (GestureService.isRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
             updateTile()
         }
