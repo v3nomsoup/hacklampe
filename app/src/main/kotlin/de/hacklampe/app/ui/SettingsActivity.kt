@@ -5,12 +5,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.service.GestureService
@@ -18,31 +24,42 @@ import de.hacklampe.app.service.GestureService
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var toggleButton: Button
+    private lateinit var statusText: TextView
 
     private val notificationPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* egal */ }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            // Egal ob erlaubt oder verweigert: Dienst trotzdem starten (er läuft auch
+            // ohne sichtbare Benachrichtigung). Der Nutzer wurde vorher aufgeklärt.
+            startGestureService()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        applyInsets()
 
         toggleButton = findViewById(R.id.toggleButton)
+        statusText = findViewById(R.id.statusText)
         val seekBar = findViewById<SeekBar>(R.id.sensitivitySeekBar)
+        val sensitivityValue = findViewById<TextView>(R.id.sensitivityValue)
         val autostart = findViewById<CheckBox>(R.id.autostartCheckBox)
 
-        // Empfindlichkeit 1..10 auf SeekBar 0..9 abbilden
-        seekBar.progress = Prefs.getSensitivity(this) - 1
+        val initial = Prefs.getSensitivity(this)
+        seekBar.progress = initial - 1
+        sensitivityValue.text = getString(R.string.sensitivity_value, initial)
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                Prefs.setSensitivity(this@SettingsActivity, progress + 1)
+                val level = progress + 1
+                Prefs.setSensitivity(this@SettingsActivity, level)
+                sensitivityValue.text = getString(R.string.sensitivity_value, level)
             }
+
             override fun onStartTrackingTouch(sb: SeekBar?) {}
+
             override fun onStopTrackingTouch(sb: SeekBar?) {
-                // Laufenden Service über die neue Empfindlichkeit informieren
                 if (GestureService.isRunning) {
-                    val refresh = Intent(this@SettingsActivity, GestureService::class.java).apply {
-                        action = GestureService.ACTION_REFRESH
-                    }
+                    val refresh = Intent(this@SettingsActivity, GestureService::class.java)
+                        .apply { action = GestureService.ACTION_REFRESH }
                     ContextCompat.startForegroundService(this@SettingsActivity, refresh)
                 }
             }
@@ -54,46 +71,58 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         toggleButton.setOnClickListener { onToggleClicked() }
-
-        requestNotificationPermissionIfNeeded()
     }
 
     override fun onResume() {
         super.onResume()
-        updateToggleLabel()
+        updateRunningUi(GestureService.isRunning)
     }
 
     private fun onToggleClicked() {
-        val intent = Intent(this, GestureService::class.java)
-        val willRun = !GestureService.isRunning
         if (GestureService.isRunning) {
-            stopService(intent)
-        } else {
-            ContextCompat.startForegroundService(this, intent)
+            stopService(Intent(this, GestureService::class.java))
+            updateRunningUi(false)
+            return
         }
-        // isRunning wird erst asynchron in onCreate/onDestroy des Service gesetzt,
-        // daher das Label sofort auf den beabsichtigten Zustand setzen.
-        setToggleLabel(willRun)
+        if (needsNotificationPermission()) {
+            showNotificationRationale()
+        } else {
+            startGestureService()
+        }
     }
 
-    private fun updateToggleLabel() {
-        setToggleLabel(GestureService.isRunning)
+    private fun startGestureService() {
+        ContextCompat.startForegroundService(this, Intent(this, GestureService::class.java))
+        updateRunningUi(true)
     }
 
-    private fun setToggleLabel(running: Boolean) {
-        toggleButton.setText(
-            if (running) R.string.settings_stop else R.string.settings_start
-        )
+    private fun updateRunningUi(running: Boolean) {
+        toggleButton.setText(if (running) R.string.settings_stop else R.string.settings_start)
+        statusText.setText(if (running) R.string.status_on else R.string.status_off)
     }
 
-    private fun requestNotificationPermissionIfNeeded() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val granted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-            if (!granted) {
+    private fun needsNotificationPermission(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+
+    private fun showNotificationRationale() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.perm_dialog_title)
+            .setMessage(R.string.perm_dialog_message)
+            .setPositiveButton(R.string.perm_dialog_ok) { _, _ ->
                 notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
+            .setNegativeButton(R.string.perm_dialog_cancel, null)
+            .show()
+    }
+
+    private fun applyInsets() {
+        val root = findViewById<View>(R.id.root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = bars.top, bottom = bars.bottom)
+            insets
         }
     }
 }
