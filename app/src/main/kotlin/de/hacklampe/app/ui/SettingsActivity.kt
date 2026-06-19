@@ -25,6 +25,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var toggleButton: Button
     private lateinit var statusText: TextView
+    private lateinit var seekBar: SeekBar
+    private lateinit var sensitivityValue: TextView
+    private lateinit var calibrationStatus: TextView
 
     private val notificationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -40,28 +43,29 @@ class SettingsActivity : AppCompatActivity() {
 
         toggleButton = findViewById(R.id.toggleButton)
         statusText = findViewById(R.id.statusText)
-        val seekBar = findViewById<SeekBar>(R.id.sensitivitySeekBar)
-        val sensitivityValue = findViewById<TextView>(R.id.sensitivityValue)
+        seekBar = findViewById(R.id.sensitivitySeekBar)
+        sensitivityValue = findViewById(R.id.sensitivityValue)
+        calibrationStatus = findViewById(R.id.calibrationStatus)
         val autostart = findViewById<CheckBox>(R.id.autostartCheckBox)
+        val calibrateButton = findViewById<Button>(R.id.calibrateButton)
 
-        val initial = Prefs.getSensitivity(this)
-        seekBar.progress = initial - 1
-        sensitivityValue.text = getString(R.string.sensitivity_value, initial)
+        seekBar.progress = Prefs.getSensitivity(this) - 1
+        sensitivityValue.text = getString(R.string.sensitivity_value, Prefs.getSensitivity(this))
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (!fromUser) return
                 val level = progress + 1
+                // Regler bewegen schaltet zurück in den manuellen Modus.
+                Prefs.clearCalibration(this@SettingsActivity)
                 Prefs.setSensitivity(this@SettingsActivity, level)
                 sensitivityValue.text = getString(R.string.sensitivity_value, level)
+                updateCalibrationStatus()
             }
 
             override fun onStartTrackingTouch(sb: SeekBar?) {}
 
             override fun onStopTrackingTouch(sb: SeekBar?) {
-                if (GestureService.isRunning) {
-                    val refresh = Intent(this@SettingsActivity, GestureService::class.java)
-                        .apply { action = GestureService.ACTION_REFRESH }
-                    ContextCompat.startForegroundService(this@SettingsActivity, refresh)
-                }
+                refreshRunningService()
             }
         })
 
@@ -70,12 +74,19 @@ class SettingsActivity : AppCompatActivity() {
             Prefs.setAutoStart(this, checked)
         }
 
+        calibrateButton.setOnClickListener {
+            startActivity(Intent(this, CalibrationActivity::class.java))
+        }
+
         toggleButton.setOnClickListener { onToggleClicked() }
     }
 
     override fun onResume() {
         super.onResume()
         updateRunningUi(GestureService.isRunning)
+        updateCalibrationStatus()
+        // Eventuell geänderte Kalibrierung an einen laufenden Dienst übernehmen.
+        refreshRunningService()
     }
 
     private fun onToggleClicked() {
@@ -96,9 +107,26 @@ class SettingsActivity : AppCompatActivity() {
         updateRunningUi(true)
     }
 
+    private fun refreshRunningService() {
+        if (GestureService.isRunning) {
+            val refresh = Intent(this, GestureService::class.java)
+                .apply { action = GestureService.ACTION_REFRESH }
+            ContextCompat.startForegroundService(this, refresh)
+        }
+    }
+
     private fun updateRunningUi(running: Boolean) {
         toggleButton.setText(if (running) R.string.settings_stop else R.string.settings_start)
         statusText.setText(if (running) R.string.status_on else R.string.status_off)
+    }
+
+    private fun updateCalibrationStatus() {
+        if (Prefs.isCalibrated(this)) {
+            val peak = Prefs.getCalibratedPeak(this)
+            calibrationStatus.text = "Modus: kalibriert (Schwelle %.0f)".format(peak)
+        } else {
+            calibrationStatus.setText(R.string.cal_status_manual)
+        }
     }
 
     private fun needsNotificationPermission(): Boolean =
