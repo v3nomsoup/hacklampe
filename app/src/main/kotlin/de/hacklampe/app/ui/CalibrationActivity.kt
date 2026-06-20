@@ -13,12 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import de.hacklampe.app.BuildConfig
 import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.detector.CalibrationAnalyzer
 import de.hacklampe.app.detector.CalibrationResult
+import de.hacklampe.app.detector.GravityFilter
 import de.hacklampe.app.service.GestureService
-import kotlin.math.sqrt
 
 class CalibrationActivity : AppCompatActivity(), SensorEventListener {
 
@@ -31,9 +32,11 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var primary: Button
     private lateinit var secondary: Button
 
+    private val gravityFilter = GravityFilter()
     private var analyzer = CalibrationAnalyzer()
     private var measuring = true
     private var pendingResult: CalibrationResult? = null
+    private var maxMagnitude = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +47,11 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
         stopService(Intent(this, GestureService::class.java))
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        if (BuildConfig.DEBUG) {
+            android.util.Log.i(TAG, "Kalibrierung Sensor ACCELEROMETER: ${sensor?.name ?: "NULL"}")
+        }
 
         instruction = findViewById(R.id.calInstruction)
         countText = findViewById(R.id.calCount)
@@ -72,10 +79,20 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         if (!measuring) return
-        val x = event.values[0]
-        val y = event.values[1]
-        val z = event.values[2]
-        analyzer.onSample(sqrt(x * x + y * y + z * z))
+        val magnitude = gravityFilter.linearMagnitude(
+            event.values[0], event.values[1], event.values[2]
+        )
+        if (BuildConfig.DEBUG && magnitude > 3f) {
+            android.util.Log.i(TAG, "CAL mag=%.1f n=%d".format(magnitude, analyzer.strokeCount))
+        }
+        analyzer.onSample(magnitude)
+
+        // Live-Feedback der stärksten Bewegung (Debug + Release).
+        if (magnitude > maxMagnitude) {
+            maxMagnitude = magnitude
+            resultText.text = "Stärkster Hack: %.0f m/s²".format(maxMagnitude)
+        }
+
         updateMeasuringUi()
     }
 
@@ -83,8 +100,10 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
 
     private fun enterMeasuring() {
         measuring = true
-        resultText.visibility = View.GONE
+        maxMagnitude = 0f
         countText.visibility = View.VISIBLE
+        resultText.visibility = View.VISIBLE
+        resultText.text = "Stärkster Hack: – m/s²"
         primary.setText(R.string.cal_done)
         secondary.setText(R.string.cal_cancel)
         updateMeasuringUi()
@@ -92,9 +111,10 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
 
     private fun updateMeasuringUi() {
         val count = analyzer.strokeCount
-        countText.text = getString(R.string.cal_count, count)
+        countText.text = getString(R.string.cal_count, count, CalibrationAnalyzer.MIN_STROKES)
         val enough = analyzer.hasEnoughData()
         primary.isEnabled = enough
+        primary.alpha = if (enough) 1f else 0.4f
         instruction.setText(
             if (enough) R.string.cal_instruction_ready else R.string.cal_instruction
         )
@@ -111,6 +131,7 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
                 .format(r.medianPeak, r.peakThreshold)
             instruction.setText(R.string.cal_instruction_result)
             primary.isEnabled = true
+            primary.alpha = 1f
             primary.setText(R.string.cal_apply)
             secondary.setText(R.string.cal_retry)
         } else {
@@ -128,6 +149,10 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
             pendingResult = null
             enterMeasuring()
         }
+    }
+
+    private companion object {
+        private const val TAG = "HackLampe"
     }
 
     private fun applyInsets() {
