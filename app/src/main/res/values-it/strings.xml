@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HackLampe</string>
+    <string name="notification_channel_name">Rilevamento gesti</string>
+    <string name="notification_title">HackLampe attivo</string>
+    <string name="notification_text">Il doppio colpo accende/spegne la torcia</string>
+    <string name="notification_stop">Ferma</string>
+    <string name="tile_label">HackLampe</string>
+    <string name="settings_start">Avvia rilevamento gesti</string>
+    <string name="settings_stop">Ferma rilevamento gesti</string>
+    <string name="settings_sensitivity">⚡ Sensibilità</string>
+    <string name="settings_autostart">🔄 Avvia automaticamente al riavvio</string>
+    <string name="settings_hint">Fai due rapidi movimenti a colpo per accendere/spegnere la torcia.</string>
+    <string name="status_on">● Attivo – il doppio colpo accende la luce</string>
+    <string name="status_off">○ Inattivo</string>
+    <string name="sensitivity_value">%1$d / 10</string>
+    <string name="sensitivity_hint">sinistra = più robusto · destra = più sensibile</string>
+    <string name="autostart_hint">Dipende dal dispositivo – alcuni produttori bloccano l\'avvio automatico.</string>
+    <string name="info_notification">ℹ️ HackLampe funziona come servizio in background. Android mostra una notifica permanente per questo – è necessaria affinché il gesto venga rilevato anche ad app chiusa.</string>
+    <string name="perm_dialog_title">Notifica necessaria</string>
+    <string name="perm_dialog_message">HackLampe rileva il gesto del colpo tramite un servizio in background. Android richiede una notifica permanente come indicatore di stato. Consenti le notifiche nel passaggio successivo.</string>
+    <string name="perm_dialog_ok">Ho capito</string>
+    <string name="perm_dialog_cancel">Annulla</string>
+    <string name="cal_title">Calibrazione</string>
+    <string name="cal_instruction">Fai 4–6 colpi decisi.</string>
+    <string name="cal_instruction_ready">Bene! Tocca \"Fatto\".</string>
+    <string name="cal_instruction_result">Va bene? Applica o riprova.</string>
+    <string name="cal_count">%1$d / %2$d colpi</string>
+    <string name="cal_done">Fatto</string>
+    <string name="cal_cancel">Annulla</string>
+    <string name="cal_apply">Applica</string>
+    <string name="cal_retry">Riprova</string>
+    <string name="calibrate_button">🎯 Calibra</string>
+    <string name="cal_status_manual">Modalità: manuale (cursore)</string>
+    <string name="cal_strongest">Colpo più forte: %1$.0f m/s²</string>
+    <string name="cal_strongest_none">Colpo più forte: –</string>
+    <string name="cal_result">Forza misurata ~%1$.0f m/s²\nSoglia di attivazione: %2$.0f m/s²</string>
+    <string name="settings_calibrated">Modalità: calibrato · soglia di attivazione %1$.0f</string>
+</resources>

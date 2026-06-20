@@ -90,7 +90,7 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
         // Live-Feedback der stärksten Bewegung (Debug + Release).
         if (magnitude > maxMagnitude) {
             maxMagnitude = magnitude
-            resultText.text = "Stärkster Hack: %.0f m/s²".format(maxMagnitude)
+            resultText.text = getString(R.string.cal_strongest, maxMagnitude)
         }
 
         updateMeasuringUi()
@@ -103,7 +103,7 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
         maxMagnitude = 0f
         countText.visibility = View.VISIBLE
         resultText.visibility = View.VISIBLE
-        resultText.text = "Stärkster Hack: – m/s²"
+        resultText.text = getString(R.string.cal_strongest_none)
         primary.setText(R.string.cal_done)
         secondary.setText(R.string.cal_cancel)
         updateMeasuringUi()
@@ -127,8 +127,7 @@ class CalibrationActivity : AppCompatActivity(), SensorEventListener {
             measuring = false
             countText.visibility = View.GONE
             resultText.visibility = View.VISIBLE
-            resultText.text = "Gemessene Stärke ~%.0f m/s²\nAuslöseschwelle: %.0f m/s²"
-                .format(r.medianPeak, r.peakThreshold)
+            resultText.text = getString(R.string.cal_result, r.medianPeak, r.peakThreshold)
             instruction.setText(R.string.cal_instruction_result)
             primary.isEnabled = true
             primary.alpha = 1f
