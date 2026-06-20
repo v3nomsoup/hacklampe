@@ -87,3 +87,11 @@ Falls sich diese Erklärung ändert, wird die aktualisierte Version mit einem ne
 ### Kontakt
 
 Fragen zu dieser Datenschutzerklärung? Kontakt: hello@eckert.rocks
+
+---
+
+### Disclaimer / Markenhinweis
+
+HackLampe is an independent, unofficial app and is not affiliated with, endorsed by, or sponsored by Motorola or Lenovo. "Motorola" is a trademark of its respective owners and is used here only to describe a similar gesture.
+
+HackLampe ist eine eigenständige, inoffizielle App und steht in keiner Verbindung zu Motorola oder Lenovo, wird von diesen nicht unterstützt oder gesponsert. „Motorola" ist eine Marke der jeweiligen Inhaber und wird hier nur zur Beschreibung einer ähnlichen Geste genannt.

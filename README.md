@@ -97,6 +97,12 @@ docs/                             privacy policy, store listing, assets
 HackLampe collects no data and has no internet access. See the
 [privacy policy](https://v3nomsoup.github.io/hacklampe/).
 
+## Disclaimer
+
+HackLampe is an independent, unofficial app and is **not affiliated with, endorsed by,
+or sponsored by Motorola or Lenovo**. "Motorola" is a trademark of its respective owners
+and is referenced only to describe a similar gesture.
+
 ## Tech
 
 Kotlin · Android SDK (minSdk 31 / target 35) · Gradle (Kotlin DSL) · JUnit4

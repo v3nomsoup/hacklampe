@@ -230,3 +230,16 @@ Bilek hareketiyle ışık yakın. HackLampe'yi indirin.
 - Screenshots: at least 2 phone screenshots per supported language (recommended 4–8). Show the chop gesture, the Quick Settings tile, the calibration wizard, and the sensitivity slider.
 
 **Verification note:** All app titles are "HackLampe" (9 characters, well under the 30-char limit). All short descriptions are roughly 66–73 characters, under the 80-char limit. All full descriptions are roughly 1.5k–1.7k characters, well under the 4000-char limit. The owner should re-count after any edits, since punctuation and locale-specific characters affect the exact totals.
+
+---
+
+## Markenhinweis / Trademark disclaimer
+
+Empfehlung: diesen Hinweis ans Ende **jeder** Langbeschreibung anhängen (sprachlich angepasst), da die Texte „Motorola" referenzieren — Google prüft Markennutzung.
+
+- **EN:** HackLampe is an independent, unofficial app and is not affiliated with, endorsed by, or sponsored by Motorola or Lenovo. "Motorola" is a trademark of its respective owners.
+- **DE:** HackLampe ist eine eigenständige, inoffizielle App und steht in keiner Verbindung zu Motorola oder Lenovo. „Motorola" ist eine Marke der jeweiligen Inhaber.
+- **ES:** HackLampe es una app independiente y no oficial, sin afiliación ni respaldo de Motorola o Lenovo. «Motorola» es una marca de sus respectivos propietarios.
+- **FR:** HackLampe est une application indépendante et non officielle, sans affiliation ni approbation de Motorola ou Lenovo. « Motorola » est une marque de ses propriétaires respectifs.
+- **IT:** HackLampe è un'app indipendente e non ufficiale, non affiliata né approvata da Motorola o Lenovo. «Motorola» è un marchio dei rispettivi proprietari.
+- **TR:** HackLampe bağımsız, resmi olmayan bir uygulamadır; Motorola veya Lenovo ile bağlantılı değildir ve onlar tarafından onaylanmamıştır. "Motorola" ilgili sahiplerinin ticari markasıdır.
