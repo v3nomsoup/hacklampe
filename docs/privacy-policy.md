@@ -43,7 +43,7 @@ If this policy changes, the updated version will be published with a new "last u
 
 ### Contact
 
-Questions about this privacy policy? Contact: [DEINE-KONTAKT-EMAIL]
+Questions about this privacy policy? Contact: hello@eckert.rocks
 
 ---
 
@@ -86,4 +86,4 @@ Falls sich diese Erklärung ändert, wird die aktualisierte Version mit einem ne
 
 ### Kontakt
 
-Fragen zu dieser Datenschutzerklärung? Kontakt: [DEINE-KONTAKT-EMAIL]
+Fragen zu dieser Datenschutzerklärung? Kontakt: hello@eckert.rocks

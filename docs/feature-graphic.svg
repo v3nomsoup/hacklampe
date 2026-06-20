@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <rect width="1024" height="500" fill="#FFB12E"/>
+
+  <!-- Taschenlampen-Motiv + Doppel-Hack-Chevrons (aus dem App-Icon) -->
+  <g transform="translate(70,70) scale(3.33)">
+    <path fill="#FFF4CF" fill-opacity="0.65" d="M61.8,52.2 L85.0,39.5 L85.0,85.9 L61.8,73.1 Z"/>
+    <path fill="#20243F" d="M24.10,58.60 L25.20,58.60 Q26.40,58.60 26.40,59.80 L26.40,65.50 Q26.40,66.70 25.20,66.70 L24.10,66.70 Q22.90,66.70 22.90,65.50 L22.90,59.80 Q22.90,58.60 24.10,58.60 Z"/>
+    <path fill="#20243F" d="M29.30,56.30 L49.00,56.30 Q51.90,56.30 51.90,59.20 L51.90,66.20 Q51.90,69.10 49.00,69.10 L29.30,69.10 Q26.40,69.10 26.40,66.20 L26.40,59.20 Q26.40,56.30 29.30,56.30 Z"/>
+    <path fill="#20243F" d="M35.70,54.00 L40.30,54.00 Q41.50,54.00 41.50,55.20 L41.50,55.70 Q41.50,56.90 40.30,56.90 L35.70,56.90 Q34.50,56.90 34.50,55.70 L34.50,55.20 Q34.50,54.00 35.70,54.00 Z"/>
+    <path fill="#20243F" d="M51.9,54.0 L60.1,49.9 L60.1,75.4 L51.9,71.4 Z"/>
+    <path fill="#FFE9A8" d="M60.50,51.10 L60.80,51.10 Q61.80,51.10 61.80,52.10 L61.80,73.30 Q61.80,74.30 60.80,74.30 L60.50,74.30 Q59.50,74.30 59.50,73.30 L59.50,52.10 Q59.50,51.10 60.50,51.10 Z"/>
+    <path fill="none" stroke="#20243F" stroke-width="4.1" stroke-linecap="round" stroke-linejoin="round" d="M34.6,28.1 L43.3,33.9 L52.0,28.1"/>
+    <path fill="none" stroke="#20243F" stroke-width="4.1" stroke-linecap="round" stroke-linejoin="round" d="M34.6,35.0 L43.3,40.8 L52.0,35.0"/>
+  </g>
+
+  <text x="440" y="235" font-family="'Helvetica Neue', Arial, sans-serif" font-size="84" font-weight="700" fill="#20243F">HackLampe</text>
+  <text x="444" y="290" font-family="'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="400" fill="#20243F">Taschenlampe per Doppel-Hack</text>
+</svg>
