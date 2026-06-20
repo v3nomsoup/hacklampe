@@ -24,7 +24,7 @@
     <string name="cal_instruction">Mach 4–6 kräftige Hackbewegungen.</string>
     <string name="cal_instruction_ready">Gut! Tippe auf „Fertig".</string>
     <string name="cal_instruction_result">Passt das? Übernehmen oder wiederholen.</string>
-    <string name="cal_count">%1$d Schläge erkannt</string>
+    <string name="cal_count">%1$d / %2$d Schläge</string>
     <string name="cal_done">Fertig</string>
     <string name="cal_cancel">Abbrechen</string>
     <string name="cal_apply">Übernehmen</string>

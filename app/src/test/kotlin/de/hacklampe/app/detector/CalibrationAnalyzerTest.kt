@@ -9,7 +9,7 @@ import org.junit.Test
 
 class CalibrationAnalyzerTest {
 
-    private val gate = 25f
+    private val gate = 15f
 
     /** Speist einen vollständigen Schlag ein: über dem Gate, dann der Peak, dann darunter. */
     private fun feedStroke(a: CalibrationAnalyzer, peak: Float) {
@@ -70,16 +70,17 @@ class CalibrationAnalyzerTest {
     @Test
     fun clampsLowPeaks() {
         val a = CalibrationAnalyzer()
-        feedStroke(a, 30f)
-        feedStroke(a, 30f)
-        feedStroke(a, 30f)
-        feedStroke(a, 30f)
+        // Schwache Schläge (Peak 18) -> 0.4*18 = 7.2 < MIN_PEAK (10) -> auf 10 angehoben.
+        repeat(4) {
+            a.onSample(18f)
+            a.onSample(0f)
+        }
         val r = a.result()
         assertNotNull(r)
         r!!
-        assertEquals(30f, r.medianPeak, 0.01f)
-        assertEquals(18f, r.peakThreshold, 0.01f)
-        assertEquals(10.8f, r.valleyThreshold, 0.01f)
+        assertEquals(18f, r.medianPeak, 0.01f)
+        assertEquals(10f, r.peakThreshold, 0.01f)
+        assertEquals(6f, r.valleyThreshold, 0.01f)
     }
 
     @Test

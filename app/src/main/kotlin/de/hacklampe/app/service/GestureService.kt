@@ -14,11 +14,12 @@ import android.hardware.SensorManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import de.hacklampe.app.BuildConfig
 import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.detector.ChopDetector
+import de.hacklampe.app.detector.GravityFilter
 import de.hacklampe.app.torch.TorchController
-import kotlin.math.sqrt
 
 class GestureService : Service(), SensorEventListener {
 
@@ -26,17 +27,24 @@ class GestureService : Service(), SensorEventListener {
     private var sensor: Sensor? = null
     private lateinit var detector: ChopDetector
     private lateinit var torch: TorchController
+    private val gravityFilter = GravityFilter()
+
+    private var firstSampleNanos = 0L
 
     override fun onCreate() {
         super.onCreate()
         isRunning = true
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         detector = ChopDetector()
         torch = TorchController(this)
 
         applyConfig()
+
+        if (BuildConfig.DEBUG) {
+            android.util.Log.i(TAG, "Sensor ACCELEROMETER: ${sensor?.name ?: "NULL"}")
+        }
 
         createChannel()
         sensor?.let {
@@ -65,19 +73,31 @@ class GestureService : Service(), SensorEventListener {
 
     private fun applyConfig() {
         if (Prefs.isCalibrated(this)) {
-            detector.setThresholds(Prefs.getCalibratedPeak(this), Prefs.getCalibratedValley(this))
+            // Empfindlichkeitsregler wirkt relativ zur Kalibrierung (Stufe 5 = 1.0).
+            val factor = Prefs.sensitivityFactor(Prefs.getSensitivity(this))
+            detector.setThresholds(
+                Prefs.getCalibratedPeak(this) * factor,
+                Prefs.getCalibratedValley(this) * factor,
+            )
         } else {
             detector.setSensitivity(Prefs.getSensitivity(this))
         }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        val x = event.values[0]
-        val y = event.values[1]
-        val z = event.values[2]
-        val magnitude = sqrt(x * x + y * y + z * z)
+        val magnitude = gravityFilter.linearMagnitude(
+            event.values[0], event.values[1], event.values[2]
+        )
+
+        if (BuildConfig.DEBUG && magnitude > 6f) {
+            if (firstSampleNanos == 0L) firstSampleNanos = event.timestamp
+            val tMs = (event.timestamp - firstSampleNanos) / 1_000_000L
+            android.util.Log.i(TAG, "WAVE t=$tMs mag=%.1f".format(magnitude))
+        }
+
         if (detector.onSample(event.timestamp, magnitude)) {
             torch.toggle()
+            if (BuildConfig.DEBUG) android.util.Log.i(TAG, "DOPPEL-HACK -> Taschenlampe umgeschaltet")
         }
     }
 
@@ -127,5 +147,6 @@ class GestureService : Service(), SensorEventListener {
         const val ACTION_REFRESH = "de.hacklampe.app.action.REFRESH"
         private const val CHANNEL_ID = "hacklampe_gestures"
         private const val NOTIF_ID = 1
+        private const val TAG = "HackLampe"
     }
 }
