@@ -15,7 +15,7 @@ data class CalibrationResult(
  * Ein "Schlag" (Stroke) ist eine zusammenhängende Phase, in der die Magnitude
  * über [gate] liegt; sein Maximum wird als Spitze erfasst.
  */
-class CalibrationAnalyzer(private val gate: Float = 25f) {
+class CalibrationAnalyzer(private val gate: Float = 15f) {
 
     private val peaks = mutableListOf<Float>()
     private var inStroke = false
@@ -64,7 +64,7 @@ class CalibrationAnalyzer(private val gate: Float = 25f) {
         const val MIN_STROKES = 4
         const val PEAK_FACTOR = 0.4f
         const val VALLEY_RATIO = 0.6f
-        const val MIN_PEAK = 18f
+        const val MIN_PEAK = 10f
         const val MAX_PEAK = 75f
     }
 }
