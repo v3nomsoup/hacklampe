@@ -31,4 +31,8 @@
     <string name="cal_retry">Wiederholen</string>
     <string name="calibrate_button">🎯 Kalibrieren</string>
     <string name="cal_status_manual">Modus: manuell (Regler)</string>
+    <string name="cal_strongest">Stärkster Hack: %1$.0f m/s²</string>
+    <string name="cal_strongest_none">Stärkster Hack: –</string>
+    <string name="cal_result">Gemessene Stärke ~%1$.0f m/s²\nAuslöseschwelle: %2$.0f m/s²</string>
+    <string name="settings_calibrated">Modus: kalibriert · Auslöseschwelle %1$.0f</string>
 </resources>

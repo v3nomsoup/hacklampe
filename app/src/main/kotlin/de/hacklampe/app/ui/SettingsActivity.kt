@@ -128,7 +128,7 @@ class SettingsActivity : AppCompatActivity() {
         if (Prefs.isCalibrated(this)) {
             val effective = Prefs.getCalibratedPeak(this) *
                 Prefs.sensitivityFactor(Prefs.getSensitivity(this))
-            calibrationStatus.text = "Modus: kalibriert · Auslöseschwelle %.0f".format(effective)
+            calibrationStatus.text = getString(R.string.settings_calibrated, effective)
         } else {
             calibrationStatus.setText(R.string.cal_status_manual)
         }
