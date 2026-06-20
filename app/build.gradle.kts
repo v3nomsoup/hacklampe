@@ -34,7 +34,7 @@ android {
         minSdk = 31
         targetSdk = 35
         versionCode = buildNumber
-        versionName = "1.0.$buildNumber"
+        versionName = "1.0"
     }
 
     // Erzeugt de.hacklampe.app.BuildConfig (u.a. DEBUG-Flag) für gegate-tes Logging.

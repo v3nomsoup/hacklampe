@@ -82,7 +82,8 @@ class SettingsActivity : AppCompatActivity() {
         toggleButton.setOnClickListener { onToggleClicked() }
 
         findViewById<TextView>(R.id.versionText).text =
-            "v${BuildConfig.VERSION_NAME}" + if (BuildConfig.DEBUG) " · debug" else ""
+            "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})" +
+                if (BuildConfig.DEBUG) " · debug" else ""
     }
 
     override fun onResume() {
