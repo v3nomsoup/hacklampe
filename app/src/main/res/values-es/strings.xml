@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HackLampe</string>
+    <string name="notification_channel_name">Detección de gestos</string>
+    <string name="notification_title">HackLampe activo</string>
+    <string name="notification_text">El doble golpe enciende la linterna</string>
+    <string name="notification_stop">Detener</string>
+    <string name="tile_label">HackLampe</string>
+    <string name="settings_start">Iniciar detección de gestos</string>
+    <string name="settings_stop">Detener detección de gestos</string>
+    <string name="settings_sensitivity">⚡ Sensibilidad</string>
+    <string name="settings_autostart">🔄 Iniciar automáticamente al reiniciar</string>
+    <string name="settings_hint">Haz dos golpes rápidos para encender o apagar la linterna.</string>
+    <string name="status_on">● Activo – el doble golpe enciende la luz</string>
+    <string name="status_off">○ Inactivo</string>
+    <string name="sensitivity_value">%1$d / 10</string>
+    <string name="sensitivity_hint">izquierda = más robusto · derecha = más sensible</string>
+    <string name="autostart_hint">Depende del dispositivo – algunos fabricantes bloquean el inicio automático.</string>
+    <string name="info_notification">ℹ️ HackLampe se ejecuta como servicio en segundo plano. Android muestra una notificación permanente para ello – es necesaria para que el gesto se detecte incluso con la app cerrada.</string>
+    <string name="perm_dialog_title">Notificación necesaria</string>
+    <string name="perm_dialog_message">HackLampe detecta el gesto de golpe mediante un servicio en segundo plano. Android requiere para ello una notificación permanente como indicador de estado. Permite las notificaciones en el siguiente paso.</string>
+    <string name="perm_dialog_ok">Entendido</string>
+    <string name="perm_dialog_cancel">Cancelar</string>
+    <string name="cal_title">Calibración</string>
+    <string name="cal_instruction">Haz de 4 a 6 golpes firmes.</string>
+    <string name="cal_instruction_ready">¡Bien! Toca «Listo».</string>
+    <string name="cal_instruction_result">¿Te parece bien? Aplica o repite.</string>
+    <string name="cal_count">%1$d / %2$d golpes</string>
+    <string name="cal_done">Listo</string>
+    <string name="cal_cancel">Cancelar</string>
+    <string name="cal_apply">Aplicar</string>
+    <string name="cal_retry">Repetir</string>
+    <string name="calibrate_button">🎯 Calibrar</string>
+    <string name="cal_status_manual">Modo: manual (control)</string>
+    <string name="cal_strongest">Golpe más fuerte: %1$.0f m/s²</string>
+    <string name="cal_strongest_none">Golpe más fuerte: –</string>
+    <string name="cal_result">Fuerza medida ~%1$.0f m/s²\nUmbral de activación: %2$.0f m/s²</string>
+    <string name="settings_calibrated">Modo: calibrado · umbral de activación %1$.0f</string>
+</resources>

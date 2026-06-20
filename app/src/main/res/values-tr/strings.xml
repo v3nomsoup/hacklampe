@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HackLampe</string>
+    <string name="notification_channel_name">Hareket algılama</string>
+    <string name="notification_title">HackLampe etkin</string>
+    <string name="notification_text">Çift darbe el fenerini açıp kapatır</string>
+    <string name="notification_stop">Durdur</string>
+    <string name="tile_label">HackLampe</string>
+    <string name="settings_start">Hareket algılamayı başlat</string>
+    <string name="settings_stop">Hareket algılamayı durdur</string>
+    <string name="settings_sensitivity">⚡ Hassasiyet</string>
+    <string name="settings_autostart">🔄 Yeniden başlatınca otomatik başlat</string>
+    <string name="settings_hint">El fenerini açıp kapatmak için iki hızlı darbe hareketi yap.</string>
+    <string name="status_on">● Etkin – çift darbe ışığı açıp kapatır</string>
+    <string name="status_off">○ Devre dışı</string>
+    <string name="sensitivity_value">%1$d / 10</string>
+    <string name="sensitivity_hint">sol = daha sağlam · sağ = daha hassas</string>
+    <string name="autostart_hint">Cihaza bağlı – bazı üreticiler otomatik başlatmayı engeller.</string>
+    <string name="info_notification">ℹ️ HackLampe bir arka plan hizmeti olarak çalışır. Android bunun için kalıcı bir bildirim gösterir – bu, uygulama kapalıyken bile hareketin algılanması için gereklidir.</string>
+    <string name="perm_dialog_title">Bildirim gerekli</string>
+    <string name="perm_dialog_message">HackLampe, darbe hareketini bir arka plan hizmetiyle algılar. Android bunun için durum göstergesi olarak kalıcı bir bildirim ister. Lütfen sonraki adımda bildirimlere izin ver.</string>
+    <string name="perm_dialog_ok">Anladım</string>
+    <string name="perm_dialog_cancel">İptal</string>
+    <string name="cal_title">Kalibrasyon</string>
+    <string name="cal_instruction">4–6 kuvvetli darbe hareketi yap.</string>
+    <string name="cal_instruction_ready">Güzel! \"Bitti\"ye dokun.</string>
+    <string name="cal_instruction_result">Uygun mu? Uygula veya tekrar dene.</string>
+    <string name="cal_count">%1$d / %2$d darbe</string>
+    <string name="cal_done">Bitti</string>
+    <string name="cal_cancel">İptal</string>
+    <string name="cal_apply">Uygula</string>
+    <string name="cal_retry">Tekrar dene</string>
+    <string name="calibrate_button">🎯 Kalibre et</string>
+    <string name="cal_status_manual">Mod: manuel (sürgü)</string>
+    <string name="cal_strongest">En güçlü darbe: %1$.0f m/s²</string>
+    <string name="cal_strongest_none">En güçlü darbe: –</string>
+    <string name="cal_result">Ölçülen güç ~%1$.0f m/s²\nTetikleme eşiği: %2$.0f m/s²</string>
+    <string name="settings_calibrated">Mod: kalibre · tetikleme eşiği %1$.0f</string>
+</resources>
