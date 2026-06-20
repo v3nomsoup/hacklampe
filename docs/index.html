@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HackLampe — Privacy Policy / Datenschutzerklärung</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #181b22;
+      --text: #e7e9ee;
+      --muted: #9aa3b2;
+      --accent: #ffb020;
+      --border: #2a2f3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 1.55rem;
+      margin: 0 0 6px;
+      line-height: 1.25;
+    }
+    h2 {
+      font-size: 1.25rem;
+      margin: 36px 0 10px;
+      color: var(--accent);
+    }
+    h3 {
+      font-size: 1.05rem;
+      margin: 22px 0 8px;
+    }
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); font-size: 0.92rem; }
+    a { color: var(--accent); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+    .lang-sep {
+      margin: 48px 0 0;
+      border: 0;
+      border-top: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    code {
+      background: #20242d;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.88em;
+    }
+    .table-wrap { overflow-x: auto; }
+    footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>HackLampe — Privacy Policy / Datenschutzerklärung</h1>
+      <p class="muted">Last updated / Zuletzt aktualisiert: 2026-06-20</p>
+    </header>
+
+    <!-- ====================== ENGLISH ====================== -->
+    <h2>Privacy Policy (English)</h2>
+
+    <div class="card">
+      <strong>Short version:</strong> HackLampe collects no personal data, has no
+      internet access, and sends nothing off your device. Everything happens
+      locally on your phone.
+    </div>
+
+    <h3>About the app</h3>
+    <p>
+      HackLampe is a flashlight app. It toggles your phone's flashlight (torch)
+      when you perform a double "chop" gesture, which is detected using the
+      device's accelerometer. The app works <strong>completely offline</strong>.
+    </p>
+
+    <h3>Data we collect</h3>
+    <p>
+      <strong>None.</strong> HackLampe does not collect, store, or transmit any
+      personal data. It has no internet or network permission, no servers, no
+      analytics, no advertising, no tracking, and no user accounts. Nothing ever
+      leaves your device.
+    </p>
+    <p>
+      The only data the app stores are your calibration settings (e.g. gesture
+      sensitivity). These are saved <strong>locally on your device only</strong>,
+      using Android's <code>SharedPreferences</code>, and are never transmitted
+      anywhere. They are removed when you uninstall the app.
+    </p>
+
+    <h3>Permissions and why they are used</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Permission</th><th>Why it is used</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>FOREGROUND_SERVICE</code><br><code>FOREGROUND_SERVICE_SPECIAL_USE</code></td>
+            <td>To keep listening for the chop gesture while the app is closed. Android requires a persistent notification for this.</td>
+          </tr>
+          <tr>
+            <td><code>POST_NOTIFICATIONS</code></td>
+            <td>To show the persistent status notification that Android requires for the background gesture service.</td>
+          </tr>
+          <tr>
+            <td><code>HIGH_SAMPLING_RATE_SENSORS</code></td>
+            <td>To read the accelerometer at a useful rate so the gesture can be detected reliably.</td>
+          </tr>
+          <tr>
+            <td><code>RECEIVE_BOOT_COMPLETED</code></td>
+            <td>Optional: to auto-start the gesture service after the device reboots.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">
+      Note: The flashlight is controlled via <code>CameraManager.setTorchMode()</code>
+      and requires <strong>no camera permission</strong>. The accelerometer also
+      requires no permission.
+    </p>
+
+    <h3>Sharing with third parties</h3>
+    <p>
+      No data is shared with any third parties. Because the app collects nothing
+      and has no network access, there is nothing to share.
+    </p>
+
+    <h3>Children</h3>
+    <p>
+      HackLampe is safe for all ages. It collects no data from anyone, including
+      children.
+    </p>
+
+    <h3>Changes to this policy</h3>
+    <p>
+      If this policy changes, the updated version will be published at this page
+      with a new "last updated" date.
+    </p>
+
+    <h3>Contact</h3>
+    <p>
+      Questions about this privacy policy? Contact:
+      <a href="mailto:[DEINE-KONTAKT-EMAIL]">[DEINE-KONTAKT-EMAIL]</a>
+    </p>
+
+    <hr class="lang-sep">
+
+    <!-- ====================== DEUTSCH ====================== -->
+    <h2>Datenschutzerklärung (Deutsch)</h2>
+
+    <div class="card">
+      <strong>Kurzfassung:</strong> HackLampe erfasst keine personenbezogenen
+      Daten, hat keinen Internetzugriff und sendet nichts von deinem Gerät.
+      Alles geschieht lokal auf deinem Telefon.
+    </div>
+
+    <h3>Über die App</h3>
+    <p>
+      HackLampe ist eine Taschenlampen-App. Sie schaltet die Taschenlampe (Torch)
+      deines Telefons ein und aus, wenn du eine doppelte „Hack"-Geste ausführst,
+      die über den Beschleunigungssensor des Geräts erkannt wird. Die App
+      funktioniert <strong>vollständig offline</strong>.
+    </p>
+
+    <h3>Welche Daten wir erfassen</h3>
+    <p>
+      <strong>Keine.</strong> HackLampe erfasst, speichert oder überträgt keine
+      personenbezogenen Daten. Die App hat keine Internet- oder
+      Netzwerkberechtigung, keine Server, keine Analyse, keine Werbung, kein
+      Tracking und keine Benutzerkonten. Es verlässt niemals etwas dein Gerät.
+    </p>
+    <p>
+      Die einzigen Daten, die die App speichert, sind deine
+      Kalibrierungseinstellungen (z. B. Gestenempfindlichkeit). Diese werden
+      <strong>ausschließlich lokal auf deinem Gerät</strong> über Androids
+      <code>SharedPreferences</code> gespeichert und nirgendwohin übertragen. Sie
+      werden gelöscht, wenn du die App deinstallierst.
+    </p>
+
+    <h3>Berechtigungen und ihre Verwendung</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Berechtigung</th><th>Wofür sie verwendet wird</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>FOREGROUND_SERVICE</code><br><code>FOREGROUND_SERVICE_SPECIAL_USE</code></td>
+            <td>Um die Hack-Geste weiter zu erkennen, während die App geschlossen ist. Android verlangt dafür eine dauerhafte Benachrichtigung.</td>
+          </tr>
+          <tr>
+            <td><code>POST_NOTIFICATIONS</code></td>
+            <td>Um die dauerhafte Status-Benachrichtigung anzuzeigen, die Android für den Hintergrund-Gestendienst verlangt.</td>
+          </tr>
+          <tr>
+            <td><code>HIGH_SAMPLING_RATE_SENSORS</code></td>
+            <td>Um den Beschleunigungssensor mit einer brauchbaren Rate auszulesen, damit die Geste zuverlässig erkannt wird.</td>
+          </tr>
+          <tr>
+            <td><code>RECEIVE_BOOT_COMPLETED</code></td>
+            <td>Optional: um den Gestendienst nach einem Neustart des Geräts automatisch zu starten.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">
+      Hinweis: Die Taschenlampe wird über <code>CameraManager.setTorchMode()</code>
+      gesteuert und benötigt <strong>keine Kamera-Berechtigung</strong>. Der
+      Beschleunigungssensor benötigt ebenfalls keine Berechtigung.
+    </p>
+
+    <h3>Weitergabe an Dritte</h3>
+    <p>
+      Es werden keine Daten an Dritte weitergegeben. Da die App nichts erfasst und
+      keinen Netzwerkzugriff hat, gibt es nichts weiterzugeben.
+    </p>
+
+    <h3>Kinder</h3>
+    <p>
+      HackLampe ist für jedes Alter geeignet. Die App erfasst von niemandem
+      Daten, auch nicht von Kindern.
+    </p>
+
+    <h3>Änderungen dieser Erklärung</h3>
+    <p>
+      Falls sich diese Erklärung ändert, wird die aktualisierte Version auf dieser
+      Seite mit einem neuen Datum „Zuletzt aktualisiert" veröffentlicht.
+    </p>
+
+    <h3>Kontakt</h3>
+    <p>
+      Fragen zu dieser Datenschutzerklärung? Kontakt:
+      <a href="mailto:[DEINE-KONTAKT-EMAIL]">[DEINE-KONTAKT-EMAIL]</a>
+    </p>
+
+    <footer>
+      HackLampe — Privacy Policy / Datenschutzerklärung · 2026-06-20
+    </footer>
+  </div>
+</body>
+</html>
