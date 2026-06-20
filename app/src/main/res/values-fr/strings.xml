@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HackLampe</string>
+    <string name="notification_channel_name">Détection de gestes</string>
+    <string name="notification_title">HackLampe actif</string>
+    <string name="notification_text">Le double coup allume la lampe torche</string>
+    <string name="notification_stop">Arrêter</string>
+    <string name="tile_label">HackLampe</string>
+    <string name="settings_start">Démarrer la détection de gestes</string>
+    <string name="settings_stop">Arrêter la détection de gestes</string>
+    <string name="settings_sensitivity">⚡ Sensibilité</string>
+    <string name="settings_autostart">🔄 Démarrer automatiquement au redémarrage</string>
+    <string name="settings_hint">Fais deux coups rapides pour allumer ou éteindre la lampe torche.</string>
+    <string name="status_on">● Actif – le double coup allume la lumière</string>
+    <string name="status_off">○ Inactif</string>
+    <string name="sensitivity_value">%1$d / 10</string>
+    <string name="sensitivity_hint">gauche = plus robuste · droite = plus sensible</string>
+    <string name="autostart_hint">Selon l\'appareil – certains fabricants bloquent le démarrage automatique.</string>
+    <string name="info_notification">ℹ️ HackLampe fonctionne comme service en arrière-plan. Android affiche pour cela une notification permanente – c\'est nécessaire pour que le geste soit détecté même quand l\'app est fermée.</string>
+    <string name="perm_dialog_title">Notification requise</string>
+    <string name="perm_dialog_message">HackLampe détecte le geste du coup via un service en arrière-plan. Android exige pour cela une notification permanente comme indicateur d\'état. Autorise les notifications à l\'étape suivante.</string>
+    <string name="perm_dialog_ok">Compris</string>
+    <string name="perm_dialog_cancel">Annuler</string>
+    <string name="cal_title">Calibrage</string>
+    <string name="cal_instruction">Fais 4 à 6 coups vigoureux.</string>
+    <string name="cal_instruction_ready">Bien ! Appuie sur « Terminé ».</string>
+    <string name="cal_instruction_result">Ça te convient ? Applique ou recommence.</string>
+    <string name="cal_count">%1$d / %2$d coups</string>
+    <string name="cal_done">Terminé</string>
+    <string name="cal_cancel">Annuler</string>
+    <string name="cal_apply">Appliquer</string>
+    <string name="cal_retry">Recommencer</string>
+    <string name="calibrate_button">🎯 Calibrer</string>
+    <string name="cal_status_manual">Mode : manuel (curseur)</string>
+    <string name="cal_strongest">Coup le plus fort : %1$.0f m/s²</string>
+    <string name="cal_strongest_none">Coup le plus fort : –</string>
+    <string name="cal_result">Force mesurée ~%1$.0f m/s²\nSeuil de déclenchement : %2$.0f m/s²</string>
+    <string name="settings_calibrated">Mode : calibré · seuil de déclenchement %1$.0f</string>
+</resources>
