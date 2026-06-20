@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import de.hacklampe.app.BuildConfig
 import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.service.GestureService
@@ -55,8 +56,8 @@ class SettingsActivity : AppCompatActivity() {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (!fromUser) return
                 val level = progress + 1
-                // Regler bewegen schaltet zurück in den manuellen Modus.
-                Prefs.clearCalibration(this@SettingsActivity)
+                // Bei bestehender Kalibrierung wirkt der Regler relativ dazu
+                // (Stufe 5 = Kalibrierungswert), sonst absolut.
                 Prefs.setSensitivity(this@SettingsActivity, level)
                 sensitivityValue.text = getString(R.string.sensitivity_value, level)
                 updateCalibrationStatus()
@@ -79,6 +80,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         toggleButton.setOnClickListener { onToggleClicked() }
+
+        findViewById<TextView>(R.id.versionText).text =
+            "v${BuildConfig.VERSION_NAME}" + if (BuildConfig.DEBUG) " · debug" else ""
     }
 
     override fun onResume() {
@@ -122,8 +126,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateCalibrationStatus() {
         if (Prefs.isCalibrated(this)) {
-            val peak = Prefs.getCalibratedPeak(this)
-            calibrationStatus.text = "Modus: kalibriert (Schwelle %.0f)".format(peak)
+            val effective = Prefs.getCalibratedPeak(this) *
+                Prefs.sensitivityFactor(Prefs.getSensitivity(this))
+            calibrationStatus.text = "Modus: kalibriert · Auslöseschwelle %.0f".format(effective)
         } else {
             calibrationStatus.setText(R.string.cal_status_manual)
         }

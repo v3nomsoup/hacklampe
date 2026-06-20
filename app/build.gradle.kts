@@ -12,6 +12,19 @@ val keystoreProps = Properties().apply {
     if (keystorePropsFile.exists()) load(FileInputStream(keystorePropsFile))
 }
 
+// versionCode = Anzahl der Git-Commits → zählt bei jedem Commit automatisch hoch.
+fun gitCommitCount(): Int = try {
+    val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
+        .directory(rootProject.projectDir)
+        .redirectErrorStream(true)
+        .start()
+    process.inputStream.bufferedReader().use { it.readText() }.trim().toIntOrNull() ?: 1
+} catch (e: Exception) {
+    1
+}
+
+val buildNumber = gitCommitCount()
+
 android {
     namespace = "de.hacklampe.app"
     compileSdk = 35
@@ -20,8 +33,13 @@ android {
         applicationId = "de.hacklampe.app"
         minSdk = 31
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = buildNumber
+        versionName = "1.0.$buildNumber"
+    }
+
+    // Erzeugt de.hacklampe.app.BuildConfig (u.a. DEBUG-Flag) für gegate-tes Logging.
+    buildFeatures {
+        buildConfig = true
     }
 
     signingConfigs {

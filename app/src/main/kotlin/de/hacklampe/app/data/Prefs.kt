@@ -46,4 +46,15 @@ object Prefs {
 
     fun clearCalibration(context: Context) =
         prefs(context).edit().putBoolean(KEY_CALIBRATED, false).apply()
+
+    /**
+     * Faktor, mit dem die kalibrierte Schwelle je nach Empfindlichkeitsstufe
+     * skaliert wird. Stufe 5 = 1.0 (Kalibrierungswert), niedriger = unempfindlicher
+     * (höhere Schwelle), höher = empfindlicher (niedrigere Schwelle).
+     * Stufe 1 = 1.4, Stufe 10 = 0.5.
+     */
+    fun sensitivityFactor(level: Int): Float {
+        val l = level.coerceIn(1, 10)
+        return 1.0f + (5 - l) * 0.1f
+    }
 }
