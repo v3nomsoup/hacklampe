@@ -7,3 +7,4 @@ local.properties
 # Release-Signierung (geheim halten, separat sichern!)
 *.jks
 keystore.properties
+.playwright-mcp/
