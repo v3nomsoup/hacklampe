@@ -5,8 +5,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.service.quicksettings.TileService
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -19,6 +21,7 @@ import de.hacklampe.app.R
 import de.hacklampe.app.data.Prefs
 import de.hacklampe.app.detector.ChopDetector
 import de.hacklampe.app.detector.GravityFilter
+import de.hacklampe.app.tile.HackTile
 import de.hacklampe.app.torch.TorchController
 
 class GestureService : Service(), SensorEventListener {
@@ -50,6 +53,8 @@ class GestureService : Service(), SensorEventListener {
         sensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
+
+        broadcastStateChange()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -108,7 +113,14 @@ class GestureService : Service(), SensorEventListener {
     override fun onDestroy() {
         sensorManager.unregisterListener(this)
         isRunning = false
+        broadcastStateChange()
         super.onDestroy()
+    }
+
+    /** Meldet Zustandsänderungen an Kachel (requestListeningState) und App (Broadcast). */
+    private fun broadcastStateChange() {
+        TileService.requestListeningState(this, ComponentName(this, HackTile::class.java))
+        sendBroadcast(Intent(ACTION_STATE_CHANGED).setPackage(packageName))
     }
 
     private fun createChannel() {
@@ -145,6 +157,7 @@ class GestureService : Service(), SensorEventListener {
 
         const val ACTION_STOP = "de.hacklampe.app.action.STOP"
         const val ACTION_REFRESH = "de.hacklampe.app.action.REFRESH"
+        const val ACTION_STATE_CHANGED = "de.hacklampe.app.action.STATE_CHANGED"
         private const val CHANNEL_ID = "hacklampe_gestures"
         private const val NOTIF_ID = 1
         private const val TAG = "HackLampe"
