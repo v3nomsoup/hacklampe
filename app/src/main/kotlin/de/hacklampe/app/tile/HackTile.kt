@@ -11,24 +11,27 @@ import de.hacklampe.app.service.GestureService
 class HackTile : TileService() {
 
     override fun onStartListening() {
-        updateTile()
+        applyTile(GestureService.isRunning)
     }
 
     override fun onClick() {
         val intent = Intent(this, GestureService::class.java)
+        val willRun = !GestureService.isRunning
         if (GestureService.isRunning) {
             stopService(intent)
         } else {
             ContextCompat.startForegroundService(this, intent)
         }
-        updateTile()
+        // Optimistisch sofort anzeigen; der Service bestätigt später via
+        // requestListeningState (-> onStartListening), wenn er wirklich an/aus ist.
+        applyTile(willRun)
     }
 
-    private fun updateTile() {
+    private fun applyTile(active: Boolean) {
         qsTile?.apply {
             icon = Icon.createWithResource(this@HackTile, R.drawable.ic_tile_flashlight)
             label = getString(R.string.tile_label)
-            state = if (GestureService.isRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+            state = if (active) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
             updateTile()
         }
     }

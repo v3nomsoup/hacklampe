@@ -1,7 +1,10 @@
 package de.hacklampe.app.ui
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -36,6 +39,14 @@ class SettingsActivity : AppCompatActivity() {
             // ohne sichtbare Benachrichtigung). Der Nutzer wurde vorher aufgeklärt.
             startGestureService()
         }
+
+    // Aktualisiert die App-Anzeige, wenn der Dienst-Zustand woanders wechselt
+    // (z.B. über die Schnelleinstellungs-Kachel).
+    private val stateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            updateRunningUi(GestureService.isRunning)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +95,21 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.versionText).text =
             "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})" +
                 if (BuildConfig.DEBUG) " · debug" else ""
+    }
+
+    override fun onStart() {
+        super.onStart()
+        ContextCompat.registerReceiver(
+            this,
+            stateReceiver,
+            IntentFilter(GestureService.ACTION_STATE_CHANGED),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
+    }
+
+    override fun onStop() {
+        unregisterReceiver(stateReceiver)
+        super.onStop()
     }
 
     override fun onResume() {
